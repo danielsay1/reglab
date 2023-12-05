@@ -6,10 +6,12 @@ lab3robot(G, 020712)
 K = 4.55;
 F = tf(K,1);
 lab3robot(G,K,F,0,0,0,0,0,020712)
+%bode(F)
 %%
 G_o = F*G;
 G_c = F*G/(1+F*G);
 [Gm, Pm, Wcg, Wcp] = margin(G_o);
+margin(G_o)
 fb = bandwidth(G_c);
 disp(fb);
 disp(Pm);
