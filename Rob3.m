@@ -104,6 +104,26 @@ obs_det = det(Observable)
 %observable and controllable since it has only one input signal and one
 %output signal
 %%
-syms L1 L2 L3
-L = [L1 L2 L3]
-e = det(A-L*B)
+%syms L1 L2 L3
+%L = [L1 L2 L3]
+D = 0;
+sys = ss(A,B,C,D);
+P = [-2.5 + 1i,-2.5-1i, -2.5];  
+K2 = place(A,B,P);
+Acl = A - B*K2;
+Ecl = eig(Acl);
+
+syscl = ss(Acl,B,C,D);
+gain = dcgain(syscl) ; 
+syscl = ss(Acl,B/gain,C,D);
+
+L0 = 1/gain; 
+step(syscl)
+lab3robot(G, K, F_leadlag, A,B,C,K2,L0,020712) % We get 1.49 instead of 1.69 as rise time 
+
+%%First of all, we want poles in the left hand plane because this gives
+%%stability. We dont want too high value on the imaginary part because this
+%%results in oscilations.. We also want the real part to be negative since
+%%this makes the amplitfude of oscilattipons decrease. Also, by choosing
+%%the real part in the complex conjuagte pairs so that the angle formed is
+%%less than 45 degrees we obtain a good damping factor. 
